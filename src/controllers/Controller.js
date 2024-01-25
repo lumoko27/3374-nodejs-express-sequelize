@@ -1,14 +1,13 @@
 class Controller {
-  constructor (entidadeService) {
+  constructor(entidadeService) {
     this.entidadeService = entidadeService;
   }
 
   async pegaTodos(req, res) {
     try {
-      const listaDeRegistros = await this.entidadeService.pegaTodosOsRegistros();
-      return res.status(200).send(listaDeRegistros);
-    }
-    catch (erro) {
+      const listaDeRegistro = await this.entidadeService.pegaTodosOsRegistros();
+      return res.status(200).json(listaDeRegistro);
+    } catch (erro) {
       // erro
     }
   }
@@ -36,28 +35,25 @@ class Controller {
   async atualiza(req, res) {
     const { id } = req.params;
     const dadosAtualizados = req.body;
-    
     try {
+      //isUpdated
       const foiAtualizado = await this.entidadeService.atualizaRegistro(dadosAtualizados, Number(id));
       if (!foiAtualizado) {
-        return res.status(400).json( {mensagem: 'Atualização falhou'});
+        return res.status(400).json({ mensagem: 'registro não foi atualizado' });
       }
-      return res.status(200).json( {mensagem: 'Atualizado com sucesso'});
-    }
-    catch (erro) {
-      //erro
+      return res.status(200).json({ mensagem: 'Atualizado com sucesso' });
+    } catch (erro) {
+      // erro
     }
   }
-  
+
   async exclui(req, res) {
     const { id } = req.params;
     try {
       await this.entidadeService.excluiRegistro(Number(id));
       return res.status(200).json({ mensagem: `id ${id} deletado` });
-
-
     } catch (error) {
-      return res.status(500).json(error.message);
+      // erro
     }
   }
 }
